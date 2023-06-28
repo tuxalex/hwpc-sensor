@@ -41,9 +41,10 @@
  */
 #define CONTAINER_ID_REGEX \
     "perf_event/kubepods.slice/" \
-    "kubepods-(besteffort/|burstable/|)-(pod[a-zA-Z0-9][a-zA-Z0-9.-]+).slice/" /* Pod ID */ \
+    "kubepods-(besteffort|burstable|).slice/" \
+    "kubepods-(besteffort|burstable|)-(pod[a-zA-Z0-9][a-zA-Z0-9._]+).slice/" /* Pod ID */ \
     "cri-containerd-([a-f0-9]{64}).scope" /* Container ID */
-#define CONTAINER_ID_REGEX_EXPECTED_MATCHES 4
+#define CONTAINER_ID_REGEX_EXPECTED_MATCHES 5
 
 /*
  * CONTAINER_NAME_REGEX is the regex used to extract the name of the Docker container from its json configuration file.
