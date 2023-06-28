@@ -109,6 +109,7 @@ target_kubernetes_resolve_name(struct target *target)
 
     config_path = build_container_config_path(target->cgroup_path);
     if (!config_path)
+        zsys_warning("perf<none>: container config file path is not found or is empty. Found container name from container id is not possible.");
         return NULL;
 
     json_file = fopen(config_path, "r");
