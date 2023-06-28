@@ -85,8 +85,8 @@ build_container_config_path(const char *cgroup_path)
 
     if (!regcomp(&re, CONTAINER_ID_REGEX, REG_EXTENDED | REG_NEWLINE)) {
         if (!regexec(&re, cgroup_path, CONTAINER_ID_REGEX_EXPECTED_MATCHES, matches, 0)) {
-            id = cgroup_path + matches[3].rm_so;
-            length = matches[3].rm_eo - matches[3].rm_so;
+            id = cgroup_path + matches[4].rm_so;
+            length = matches[4].rm_eo - matches[4].rm_so;
             snprintf(buffer, PATH_MAX, "/run/containerd/io.containerd.runtime.v2.task/k8s.io/%.*s/config.json", length, id);
             config_path = strdup(buffer);
         }
