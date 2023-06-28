@@ -128,7 +128,7 @@ target_resolve_real_name(struct target *target)
             break;
 
         case TARGET_TYPE_KUBERNETES:
-            target_real_name = target_kubernetes_resolve_name(target);
+            target_real_name = target_kubernetes_container_id(target->cgroup_path);
             break;
 
         case TARGET_TYPE_ALL:
