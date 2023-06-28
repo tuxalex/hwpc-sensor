@@ -72,7 +72,7 @@ target_detect_type(const char *cgroup_path)
         return TARGET_TYPE_DOCKER;
 
     /* Kubernetes (running containers) */
-    if (strstr(cgroup_path, "perf_event/kubepods"))
+    if (strstr(cgroup_path, "perf_event/kubepods.slice"))
         return TARGET_TYPE_KUBERNETES;
 
     /* LibVirt (running virtual machine) */

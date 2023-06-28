@@ -40,18 +40,16 @@
  * CONTAINER_ID_REGEX_EXPECTED_MATCHES is the number of matches expected from the regex. (num groups + 1)
  */
 #define CONTAINER_ID_REGEX \
-    "perf_event/kubepods/" \
-    "(besteffort/|burstable/|)" \
-    "(pod[a-zA-Z0-9][a-zA-Z0-9.-]+)/" /* Pod ID */ \
-    "([a-f0-9]{64})" /* Container ID */ \
-    "(/[a-zA-Z0-9][a-zA-Z0-9.-]+|)" /* Resource group */
-#define CONTAINER_ID_REGEX_EXPECTED_MATCHES 5
+    "perf_event/kubepods.slice/" \
+    "kubepods-(besteffort/|burstable/|)-(pod[a-zA-Z0-9][a-zA-Z0-9.-]+).slice/" /* Pod ID */ \
+    "cri-containerd-([a-f0-9]{64}).scope" /* Container ID */
+#define CONTAINER_ID_REGEX_EXPECTED_MATCHES 4
 
 /*
  * CONTAINER_NAME_REGEX is the regex used to extract the name of the Docker container from its json configuration file.
  * CONTAINER_NAME_REGEX_EXPECTED_MATCHES is the number of matches expected from the regex. (num groups + 1)
  */
-#define CONTAINER_NAME_REGEX "\"Name\":\"/([a-zA-Z0-9][a-zA-Z0-9_.-]+)\""
+#define CONTAINER_NAME_REGEX "\"hostname\":\"/([a-zA-Z0-9][a-zA-Z0-9_.-]+)\""
 #define CONTAINER_NAME_REGEX_EXPECTED_MATCHES 2
 
 
@@ -88,7 +86,7 @@ build_container_config_path(const char *cgroup_path)
         if (!regexec(&re, cgroup_path, CONTAINER_ID_REGEX_EXPECTED_MATCHES, matches, 0)) {
             id = cgroup_path + matches[3].rm_so;
             length = matches[3].rm_eo - matches[3].rm_so;
-            snprintf(buffer, PATH_MAX, "/var/lib/docker/containers/%.*s/config.v2.json", length, id);
+            snprintf(buffer, PATH_MAX, "/run/containerd/io.containerd.runtime.v2.task/k8s.io/%.*s/config.json", length, id);
             config_path = strdup(buffer);
         }
         regfree(&re);
