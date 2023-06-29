@@ -32,6 +32,7 @@
 #include <stdlib.h>
 #include <regex.h>
 #include <errno.h>
+#include <string.h>
 
 #include "target.h"
 #include "target_kubernetes.h"
@@ -46,6 +47,8 @@
     "kubepods-(besteffort|burstable|)-(pod[a-zA-Z0-9][a-zA-Z0-9._]+).slice/" /* Pod ID */ \
     "cri-containerd-([a-f0-9]{64}).scope" /* Container ID */
 #define CONTAINER_ID_REGEX_EXPECTED_MATCHES 5
+
+#define CONTAINER_SHORT_ID_LENGTH 14
 
 /*
  * CONTAINER_NAME_REGEX is the regex used to extract the name of the Docker container from its json configuration file.
@@ -79,11 +82,15 @@ target_kubernetes_container_id(char *cgroup_path)
 {
     regex_t re;
     regmatch_t matches[CONTAINER_ID_REGEX_EXPECTED_MATCHES];
-    char *target_name = NULL;
+    char *id = NULL;
+    char *target_name;
+    target_name = (char *) malloc ((CONTAINER_SHORT_ID_LENGTH + 1) * sizeof (char));
 
     if (!regcomp(&re, CONTAINER_ID_REGEX, REG_EXTENDED | REG_NEWLINE)) {
         if (!regexec(&re, cgroup_path, CONTAINER_ID_REGEX_EXPECTED_MATCHES, matches, 0)) {
-            target_name = cgroup_path + matches[4].rm_so;
+            id = cgroup_path + matches[4].rm_so;
+            strncpy(target_name, id, CONTAINER_SHORT_ID_LENGTH);
+            target_name[CONTAINER_SHORT_ID_LENGTH] = '\0';
         }
         regfree(&re);
     }

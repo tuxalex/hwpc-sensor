@@ -29,10 +29,12 @@ set(SENSOR_SOURCES
     src/storage_csv.c
     src/storage_socket.c
     src/sensor.c
+    src/storage_daemon.c
 )
 
 find_package(PkgConfig)
 pkg_check_modules(CZMQ REQUIRED libczmq)
+pkg_check_modules(PTHREADSTUBS REQUIRED pthread-stubs)
 #pkg_check_modules(PFM REQUIRED libpfm)
 
 if(WITH_MONGODB)
